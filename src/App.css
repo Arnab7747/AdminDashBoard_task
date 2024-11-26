@@ -1,38 +1,162 @@
-.App {
-  text-align: center;
+
+:root {
+
+--primary-color: #1159de;
+--secondary-color: #2ecc71;
+--background-color: #f4f4f4;
+--text-color: #000000;
+--sidebar-width: 250px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+body {
+font-family: 'Arial', sans-serif;
+line-height: 1.6;
+background-color: var(--background-color);
+color: var(--text-color);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.app {
+display: flex;
+min-height: 100vh;
+position: relative;
 }
 
-.App-link {
-  color: #61dafb;
+.menu-toggle {
+position: fixed;
+top: 15px;
+left: 15px;
+z-index: 1000;
+background-color: var(--primary-color);
+color: white;
+border: none;
+padding: 10px 15px;
+border-radius: 5px;
+cursor: pointer;
+display: none; /* Hidden on desktop */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.sidebar {
+width: var(--sidebar-width);
+background-color: white;
+box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+transition: transform 0.3s ease;
+position: fixed;
+top: 2.5vh;
+left: 0;
+bottom: 0;
+padding-top: 60px;
+z-index: 100;
+
+}
+
+.sidebar a {
+display: block;
+padding: 15px 20px;
+text-decoration: none;
+color: var(--text-color);
+transition: background-color 0.3s ease;
+}
+
+.sidebar a:hover {
+background-color: #f1f1f1;
+}
+
+.content {
+flex-grow: 1;
+padding: 20px;
+margin-left: var(--sidebar-width);
+transition: margin-left 0.3s ease;
+width: calc(100% - var(--sidebar-width));
+}
+
+@media screen and (max-width: 768px) {
+.menu-toggle {
+  display: block; 
+}
+
+.sidebar {
+  transform: translateX(-100%);
+  width: 100%;
+  max-width: 300px;
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.content {
+  margin-left: 0;
+  width: 100%;
+  padding: 20px 10px;
+}
+
+.menu-toggle {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+}
+}
+
+
+.sidebar a:focus {
+outline: 2px solid var(--primary-color);
+outline-offset: -2px;
+}
+
+.menu-toggle:focus {
+outline: 2px solid white;
+outline-offset: 2px;
+}
+
+
+@keyframes slideIn {
+from {
+  transform: translateX(-100%);
+}
+to {
+  transform: translateX(0);
+}
+}
+
+.sidebar.open {
+animation: slideIn 0.3s ease;
+}
+
+
+@media screen and (max-width: 480px) {
+body {
+  font-size: 14px;
+}
+
+.sidebar a {
+  padding: 12px 15px;
+}
+}
+
+
+@media print {
+.menu-toggle,
+.sidebar {
+  display: none;
+}
+
+.content {
+  margin-left: 0;
+  width: 100%;
+}
+}
+
+.sidebar a {
+  text-decoration: none; 
+  color: inherit;
+}
+
+.sidebar a:hover {
+  text-decoration: none; 
 }

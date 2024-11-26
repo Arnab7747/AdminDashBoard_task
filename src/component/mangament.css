@@ -1,0 +1,143 @@
+/* User Management Styling */
+.user-management {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .user-management h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
+    border-bottom: 2px solid #257ede;
+    padding-bottom: 10px;
+  }
+  
+  /* Form Styling */
+  .user-management > div:first-of-type {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+  }
+  
+  .user-management input,
+  .user-management select {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .user-management input:focus,
+  .user-management select:focus {
+    outline: none;
+    border-color: #2683e6;
+    box-shadow: 0 0 0 2px rgba(23, 35, 47, 0.25);
+  }
+  
+  .user-management button {
+    padding: 10px 15px;
+    background-color: #06a45d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 
+      background-color 0.3s ease,
+      transform 0.2s ease;
+  }
+  
+  .user-management button:hover {
+    background-color: #375287;
+    transform: translateY(-2px);
+  }
+  
+  /* Table Styling */
+  .user-management table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .user-management thead {
+    background-color: #f1f3f5;
+  }
+  
+  .user-management th {
+    padding: 12px 15px;
+    text-align: left;
+    color: #495057;
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
+  }
+  
+  .user-management tbody tr {
+    transition: background-color 0.3s ease;
+  }
+  
+  .user-management tbody tr:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .user-management td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  .user-management tbody tr:last-child td {
+    border-bottom: none;
+  }
+  
+  /* Action Buttons in Table */
+  .user-management td button {
+    background-color: #dc3545;
+    padding: 6px 10px;
+    font-size: 14px;
+    margin-right: 5px;
+  }
+  
+  .user-management td button:hover {
+    background-color: #c82333;
+  }
+  
+  /* Status Styling */
+  .user-management td:nth-child(3) {
+    font-weight: 500;
+  }
+  
+  .user-management td:nth-child(3)[data-status="Active"] {
+    color: #28a745;
+  }
+  
+  .user-management td:nth-child(3)[data-status="Inactive"] {
+    color: #6c757d;
+  }
+  
+  /* Responsive Design */
+  @media screen and (max-width: 600px) {
+    .user-management > div:first-of-type {
+      flex-direction: column;
+    }
+  
+    .user-management input,
+    .user-management select,
+    .user-management button {
+      width: 100%;
+    }
+  
+    .user-management table {
+      font-size: 14px;
+    }
+  }
