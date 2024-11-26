@@ -1,42 +1,87 @@
 import React, { useState, useEffect } from "react";
-import { fetchUsers, addUser, updateUser, deleteUser } from "../services/MockApi";
+import { fetchUsers, addUser, deleteUser } from "../services/MockApi";
 import './mangament.css'
 
 const UsersManagment = () => {
   const [users, setUsers] = useState([]);
   const [form, setForm] = useState({ name: "", role: "", status: "Active" });
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     fetchUsers().then(setUsers);
   }, []);
 
+  const validateForm = () => {
+    const newErrors = {};
+    if (!form.name.trim()) {
+      newErrors.name = "Name is required";
+      
+    }
+    if (!form.role.trim()) {
+      newErrors.role = "Role is required";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleAddUser = () => {
-    addUser(form).then(() => {
-      fetchUsers().then(setUsers);
-      setForm({ name: "", role: "", status: "Active" });
-    });
+    if (validateForm()) {
+      addUser(form).then(() => {
+        fetchUsers().then(setUsers);
+        setForm({ name: "", role: "", status: "Active" });
+        setErrors({});
+      });
+    }
   };
 
   const handleDeleteUser = (id) => {
-    deleteUser(id).then(() => fetchUsers().then(setUsers));
+    console.log("Deleting user with ID:", id); // Debugging log
+    deleteUser(id)
+      .then(() => {
+        // Immediately update the state to remove the deleted user from the UI
+        setUsers((prevUsers) => prevUsers.filter(user => user.id !== id));
+      })
+      .catch((err) => console.error("Error deleting user:", err)); // Catch errors for debugging
+  };
+  
+  
+
+  const handleInputChange = (e, field) => {
+    setForm({ ...form, [field]: e.target.value });
+    // Clear the specific error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => {
+        const newErrors = {...prev};
+        delete newErrors[field];
+        return newErrors;
+      });
+    }
   };
 
   return (
     <div className="user-management">
       <h2>User Management</h2>
-      <div>
-        <input
-          type="text"
-          placeholder="Name"
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-        />
-        <input
-          type="text"
-          placeholder="Role"
-          value={form.role}
-          onChange={(e) => setForm({ ...form, role: e.target.value })}
-        />
+      <div className="form-container">
+        <div className="input-group">
+          <input
+            type="text"
+            placeholder="Name"
+            value={form.name}
+            onChange={(e) => handleInputChange(e, 'name')}
+          />
+          {errors.name && <span className="error">{errors.name}</span>}
+        </div>
+        
+        <div className="input-group">
+          <input
+            type="text"
+            placeholder="Role"
+            value={form.role}
+            onChange={(e) => handleInputChange(e, 'role')}
+          />
+          {errors.role && <span className="error">{errors.role}</span>}
+        </div>
+        
         <select
           value={form.status}
           onChange={(e) => setForm({ ...form, status: e.target.value })}
@@ -44,7 +89,13 @@ const UsersManagment = () => {
           <option value="Active">Active</option>
           <option value="Inactive">Inactive</option>
         </select>
-        <button onClick={handleAddUser}>Add User</button>
+        
+        <button 
+          onClick={handleAddUser}
+          disabled={!form.name.trim() || !form.role.trim()}
+        >
+          Add User
+        </button>
       </div>
 
       <table>

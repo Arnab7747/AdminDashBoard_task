@@ -28,7 +28,7 @@ const mockData = {
   };
   
   export const deleteUser = (id) => {
-    const userIndex = mockData.users.findIndex((user) => user.id === id);
+    const userIndex = mockData.users.findIndex((user) => user.id === Number(id)); // Ensure proper type comparison
     if (userIndex !== -1) {
       mockData.users.splice(userIndex, 1);
       return Promise.resolve("User deleted successfully!");
