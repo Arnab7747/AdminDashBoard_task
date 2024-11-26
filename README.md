@@ -68,3 +68,40 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+# Role and Permission Management Dashboard
+
+This project is a **Role and Permission Management Dashboard** built using **React.js**. It provides an intuitive and user-friendly interface for administrators to manage users, roles, and permissions effectively. The application uses mock APIs to simulate backend functionality for CRUD operations, enabling seamless testing and validation of features without a fully implemented backend.
+
+---
+
+## Features
+
+### User Management:
+- View and manage user details, including roles and status (Active/Inactive).
+- Add, edit, and delete users effortlessly.
+
+### Role Management:
+- Create and edit roles with customizable permissions.
+- Assign multiple permissions (e.g., Read, Write, Delete) to roles.
+- Display roles and their permissions dynamically.
+
+### Permission Management:
+- Define dynamic permissions for roles.
+- Easily update or modify permissions for existing roles.
+
+### Mock API Integration:
+- Simulated backend using a mock API for all CRUD operations.
+- Instant feedback on adding, updating, and deleting users or roles.
+
+---
+
+## Tech Stack
+- **Frontend**: React.js, CSS
+- **Mock API**: JavaScript-based simulation for CRUD operations
+
+---
+
+Feel free to contribute by submitting issues or pull requests! 😊
+
