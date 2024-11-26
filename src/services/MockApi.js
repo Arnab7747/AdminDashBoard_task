@@ -28,7 +28,7 @@ const mockData = {
   };
   
   export const deleteUser = (id) => {
-    const userIndex = mockData.users.findIndex((user) => user.id === Number(id)); // Ensure proper type comparison
+    const userIndex = mockData.users.findIndex((user) => user.id === Number(id)); 
     if (userIndex !== -1) {
       mockData.users.splice(userIndex, 1);
       return Promise.resolve("User deleted successfully!");
@@ -45,7 +45,7 @@ const mockData = {
     return Promise.reject("Role not found");
   };
   
-  // New role management functions
+ 
   export const addRole = (role) => {
     const newRole = { id: Date.now(), ...role };
     mockData.roles.push(newRole);

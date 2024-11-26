@@ -1,113 +1,165 @@
 import React, { useState, useEffect } from "react";
+import { 
+  fetchRoles, 
+  addRole, 
+  updateRole, 
+  deleteRole 
+} from "../services/MockApi";
 import './role.css';
-import {
-    fetchRoles,
-    addRole, 
-    updateRole,
-    
-  } from "../services/MockApi";
-  
-
-const RoleManagment = () => {
+const RoleManagement = () => {
   const [roles, setRoles] = useState([]);
-  const [newRole, setNewRole] = useState({ name: "", permissions: "", attributes: "" });
-  const [editingRole, setEditingRole] = useState(null);
+  const [editingRoles, setEditingRoles] = useState({});
+
 
   useEffect(() => {
     fetchRoles().then(setRoles);
   }, []);
 
-  const handleCreateRole = () => {
-    const roleData = {
-      ...newRole,
-      permissions: newRole.permissions.split(",").map((p) => p.trim()),
-      attributes: newRole.attributes.split(",").map((a) => a.trim()),
-    };
-    addRole({ name: "New Role", permissions: ["Read", "Write"] })
-  .then((message) => console.log(message))
-  .catch((err) => console.error(err));
 
+  const handleRoleChange = (id, field, value) => {
+ 
+    setRoles(prevRoles => 
+      prevRoles.map(role => 
+        role.id === id 
+          ? { ...role, [field]: value }
+          : role
+      )
+    );
+
+    
+    setEditingRoles(prev => ({
+      ...prev,
+      [id]: { ...prev[id], [field]: value }
+    }));
   };
 
-  const handleUpdateRole = () => {
-    if (editingRole) {
-      const updatedData = {
-        ...editingRole,
-        permissions: editingRole.permissions.split(",").map((p) => p.trim()),
-        attributes: editingRole.attributes.split(",").map((a) => a.trim()),
-      };
-      updateRole(editingRole.id, updatedData).then(() => {
-        fetchRoles().then(setRoles);
-        alert("Role updated successfully!");
-        setEditingRole(null);
+
+  const saveRoleChanges = (role) => {
+
+    const updatedRole = { 
+      ...role,
+      permissions: typeof role.permissions === 'string' 
+        ? role.permissions.split(',').map(p => p.trim())
+        : role.permissions,
+      attributes: typeof role.attributes === 'string'
+        ? role.attributes.split(',').map(a => a.trim())
+        : role.attributes
+    };
+
+
+    updateRole(role.id, updatedRole)
+      .then(() => {
+   
+        const { [role.id]: removed, ...remainingEditing } = editingRoles;
+        setEditingRoles(remainingEditing);
+      })
+      .catch(error => {
+        console.error('Failed to update role:', error);
+       
+        setRoles(prevRoles => 
+          prevRoles.map(r => r.id === role.id ? role : r)
+        );
       });
-    }
+  };
+
+ 
+  const handleCreateRole = () => {
+    const newRole = {
+      name: "New Role",
+      permissions: ["Read"],
+      attributes: []
+    };
+
+    addRole(newRole)
+      .then(createdRole => {
+        setRoles(prevRoles => [...prevRoles, createdRole]);
+      })
+      .catch(error => {
+        console.error('Failed to create role:', error);
+      });
+  };
+
+
+  const handleDeleteRole = (roleId) => {
+    deleteRole(roleId)
+      .then(() => {
+        setRoles(prevRoles => 
+          prevRoles.filter(role => role.id !== roleId)
+        );
+      })
+      .catch(error => {
+        console.error('Failed to delete role:', error);
+      });
   };
 
   return (
     <div className="role-management">
       <h2>Role Management</h2>
+      
+      <button 
+        onClick={handleCreateRole} 
+        className="create-role-btn"
+      >
+        Create New Role
+      </button>
 
-      <div className="role-creation">
-        <h3>Create New Role</h3>
-        <input
-          type="text"
-          placeholder="Role Name"
-          value={newRole.name}
-          onChange={(e) => setNewRole({ ...newRole, name: e.target.value })}
-        />
-        <input
-          type="text"
-          placeholder="Permissions (comma-separated)"
-          value={newRole.permissions}
-          onChange={(e) => setNewRole({ ...newRole, permissions: e.target.value })}
-        />
-        <input
-          type="text"
-          placeholder="Attributes (comma-separated)"
-          value={newRole.attributes}
-          onChange={(e) => setNewRole({ ...newRole, attributes: e.target.value })}
-        />
-        <button onClick={handleCreateRole}>Create Role</button>
+      <div className="roles-list">
+        {roles.map(role => (
+          <div key={role.id} className="role-item">
+            <div className="role-details">
+              <input
+                type="text"
+                value={role.name}
+                onChange={(e) => handleRoleChange(role.id, 'name', e.target.value)}
+                className="role-name-input"
+              />
+              
+              <input
+                type="text"
+                value={
+                  Array.isArray(role.permissions) 
+                    ? role.permissions.join(', ') 
+                    : role.permissions
+                }
+                onChange={(e) => handleRoleChange(role.id, 'permissions', e.target.value)}
+                placeholder="Permissions (comma-separated)"
+                className="role-permissions-input"
+              />
+              
+              <input
+                type="text"
+                value={
+                  Array.isArray(role.attributes) 
+                    ? role.attributes.join(', ') 
+                    : role.attributes
+                }
+                onChange={(e) => handleRoleChange(role.id, 'attributes', e.target.value)}
+                placeholder="Attributes (comma-separated)"
+                className="role-attributes-input"
+              />
+              
+              <div className="role-actions">
+                {editingRoles[role.id] && (
+                  <button 
+                    onClick={() => saveRoleChanges(role)}
+                    className="save-btn"
+                  >
+                    Save
+                  </button>
+                )}
+                <button 
+                  onClick={() => handleDeleteRole(role.id)}
+                  className="delete-btn"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
-
-      <div className="role-editing">
-        <h3>Edit Existing Roles</h3>
-        {roles.map((role) => (
-  <div key={role.id}>
-    {role.name} - {Array.isArray(role.permissions) ? role.permissions.join(", ") : "No permissions"}
-  </div>
-))
-}
-      </div>
-
-      {editingRole && (
-        <div className="edit-form">
-          <h3>Edit Role: {editingRole.name}</h3>
-          <input
-            type="text"
-            placeholder="Role Name"
-            value={editingRole.name}
-            onChange={(e) => setEditingRole({ ...editingRole, name: e.target.value })}
-          />
-          <input
-            type="text"
-            placeholder="Permissions (comma-separated)"
-            value={editingRole.permissions}
-            onChange={(e) => setEditingRole({ ...editingRole, permissions: e.target.value })}
-          />
-          <input
-            type="text"
-            placeholder="Attributes (comma-separated)"
-            value={editingRole.attributes}
-            onChange={(e) => setEditingRole({ ...editingRole, attributes: e.target.value })}
-          />
-          <button onClick={handleUpdateRole}>Update Role</button>
-          <button onClick={() => setEditingRole(null)}>Cancel</button>
-        </div>
-      )}
     </div>
   );
 };
 
-export default RoleManagment;
+export default RoleManagement;

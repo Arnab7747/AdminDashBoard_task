@@ -38,7 +38,7 @@ border: none;
 padding: 10px 15px;
 border-radius: 5px;
 cursor: pointer;
-display: none; /* Hidden on desktop */
+display: none;
 }
 
 .sidebar {
@@ -47,9 +47,9 @@ background-color: white;
 box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 transition: transform 0.3s ease;
 position: fixed;
-top: 2.5vh;
+top: 0;
 left: 0;
-bottom: 0;
+bottom: -5vh;
 padding-top: 60px;
 z-index: 100;
 

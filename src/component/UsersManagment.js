@@ -35,20 +35,20 @@ const UsersManagment = () => {
   };
 
   const handleDeleteUser = (id) => {
-    console.log("Deleting user with ID:", id); // Debugging log
+    console.log("Deleting user with ID:", id); 
     deleteUser(id)
       .then(() => {
-        // Immediately update the state to remove the deleted user from the UI
+       
         setUsers((prevUsers) => prevUsers.filter(user => user.id !== id));
       })
-      .catch((err) => console.error("Error deleting user:", err)); // Catch errors for debugging
+      .catch((err) => console.error("Error deleting user:", err)); 
   };
   
   
 
   const handleInputChange = (e, field) => {
     setForm({ ...form, [field]: e.target.value });
-    // Clear the specific error when user starts typing
+
     if (errors[field]) {
       setErrors(prev => {
         const newErrors = {...prev};
